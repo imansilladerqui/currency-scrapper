@@ -11,18 +11,20 @@ import hashlib
 from scrapy.exceptions import DropItem
 from scrapy.http import Request
 from francesposadas.items import FrancesposadasItem
+import constants
 
 class FrancesposadasPipeline(object):
     def __init__(self):
-        self.conn = pymysql.connect('paisanoscreando.cskgygedfvbd.sa-east-1.rds.amazonaws.com', 'paisanoscreando', 'LaClaveSecreta', 
-                                    'cambioposadas', charset="utf8",
-                                    use_unicode=True)
+        self.conn = pymysql.connect(constants.database_env, constants.table, constants.password, 
+        constants.user, charset="utf8",
+        use_unicode=True)
         self.cursor = self.conn.cursor()
 
     def process_item(self, item, spider):    
-            self.cursor.execute("""INSERT INTO cambioposadas.banco_frances (entidad, compra, venta, dia, hora)  
+            self.cursor.execute("""INSERT INTO %s.banco_frances (entidad, compra, venta, dia, hora)  
                         VALUES (%s, %s, %s, %s, %s)""", 
-                    (item['entidad'].encode('utf-8'),
+                    (constants.table,
+                        item['entidad'].encode('utf-8'),
                         item['compra'].encode('utf-8'),
                         item['venta'].encode('utf-8'),
                         item['dia'].encode('utf-8'),
