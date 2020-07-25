@@ -11,20 +11,18 @@ import hashlib
 from scrapy.exceptions import DropItem
 from scrapy.http import Request
 from supervielleposadas.items import SupervielleposadasItem
-import constants
 
 class SupervielleposadasPipeline(object):
     def __init__(self):
-        self.conn = pymysql.connect(constants.database_env, constants.table, constants.password, 
-        constants.user, charset="utf8",
+        self.conn = pymysql.connect(host='127.0.0.1', port=3308, db='mercado_cambios', passwd='', 
+        user='root', charset="utf8",
         use_unicode=True)
         self.cursor = self.conn.cursor()
 
     def process_item(self, item, spider):    
-            self.cursor.execute("""INSERT INTO %s.banco_supervielle (entidad, compra, venta, dia, hora)  
+            self.cursor.execute("""INSERT INTO mercado_cambios.banco_supervielle (entidad, compra, venta, dia, hora)  
                         VALUES (%s, %s, %s, %s, %s)""", 
-                    (constants.table,
-                        item['entidad'].encode('utf-8'),
+                    (item['entidad'].encode('utf-8'),
                         item['compra'].encode('utf-8'),
                         item['venta'].encode('utf-8'),
                         item['dia'].encode('utf-8'),

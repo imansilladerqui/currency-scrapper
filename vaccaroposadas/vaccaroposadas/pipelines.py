@@ -11,19 +11,19 @@ import hashlib
 from scrapy.exceptions import DropItem
 from scrapy.http import Request
 from vaccaroposadas.items import VaccaroposadasItem
-import constants
+import myconstants
 
 class VaccaroposadasPipeline(object):
     def __init__(self):
-        self.conn = pymysql.connect(constants.database_env, constants.table, constants.password, 
-        constants.user, charset="utf8",
+        self.conn = pymysql.connect(myconstants.localhost:3308, myconstants.table, myconstants.password, 
+        myconstants.user, charset="utf8",
         use_unicode=True)
         self.cursor = self.conn.cursor()
 
     def process_item(self, item, spider):    
             self.cursor.execute("""INSERT INTO %s.casa_vaccaro (entidad, compra, venta, dia, hora)  
                         VALUES (%s, %s, %s, %s, %s)""", 
-                    (constants.table,
+                    (myconstants.table,
                         item['entidad'].encode('utf-8'),
                         item['compra'].encode('utf-8'),
                         item['venta'].encode('utf-8'),
